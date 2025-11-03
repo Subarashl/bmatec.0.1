@@ -2,76 +2,65 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Bmatec.Models; // <-- Adicione a referência ao namespace dos seus Models!
 
-public class HomeController : Controller
+namespace Bmatec.Controllers
 {
-    private readonly IConfiguration _configuration;
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public HomeController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public class HomeController : Controller
     {
-        _configuration = configuration;
-        _httpClientFactory = httpClientFactory;
-    }
+        private readonly IConfiguration _configuration;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-    // Este método irá lidar com o retorno do Mercado Livre: https://bmatec.onrender.com/?code=...
-    public async Task<IActionResult> Index(string code)
-    {
-        if (string.IsNullOrEmpty(code))
+        public HomeController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
-            // Acesso normal à raiz do site.
-            return View(); 
+            _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
 
-        // 1. Obter as configurações (Client ID, Secret, etc.)
-        var clientId = _configuration["MercadoLivreApi:ClientId"];
-        var clientSecret = _configuration["MercadoLivreApi:ClientSecret"];
-        var redirectUri = _configuration["MercadoLivreApi:RedirectUri"];
-        var tokenUrl = _configuration["MercadoLivreApi:TokenUrl"];
-
-        // 2. Preparar o conteúdo da requisição POST
-        var content = new FormUrlEncodedContent(new[]
+        public async Task<IActionResult> Index(string code)
         {
-            new KeyValuePair<string, string>("grant_type", "authorization_code"),
-            new KeyValuePair<string, string>("client_id", clientId),
-            new KeyValuePair<string, string>("client_secret", clientSecret),
-            new KeyValuePair<string, string>("code", code),
-            new KeyValuePair<string, string>("redirect_uri", redirectUri)
-        });
+            if (string.IsNullOrEmpty(code))
+            {
+                return View(); 
+            }
 
-        // 3. Fazer a requisição POST para o Mercado Livre
-        var httpClient = _httpClientFactory.CreateClient();
-        var response = await httpClient.PostAsync(tokenUrl, content);
+            // 1. Obter as configurações (Client ID, Secret, etc.)
+            var clientId = _configuration["MercadoLivreApi:ClientId"];
+            var clientSecret = _configuration["MercadoLivreApi:ClientSecret"];
+            var redirectUri = _configuration["MercadoLivreApi:RedirectUri"];
+            var tokenUrl = _configuration["MercadoLivreApi:TokenUrl"];
 
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            
-            // 4. Deserializar e salvar os tokens
-            var tokenData = JsonSerializer.Deserialize<TokenResponse>(jsonString);
-            
-            // --- AÇÃO CRUCIAL: SALVAR NO BANCO DE DADOS ---
-            // Salve tokenData.access_token, tokenData.refresh_token, e tokenData.user_id
-            
-            // 5. Redirecionar
-            return RedirectToAction("Dashboard");
+            // 2. Preparar o conteúdo da requisição POST
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("grant_type", "authorization_code"),
+                new KeyValuePair<string, string>("client_id", clientId),
+                new KeyValuePair<string, string>("client_secret", clientSecret),
+                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("redirect_uri", redirectUri)
+            });
+
+            // 3. Fazer a requisição POST para o Mercado Livre
+            var httpClient = _httpClientFactory.CreateClient();
+            var response = await httpClient.PostAsync(tokenUrl, content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                
+                // 4. Deserializar e salvar os tokens
+                var tokenData = JsonSerializer.Deserialize<TokenResponse>(jsonString);
+                
+                // --- AÇÃO CRUCIAL: SALVAR NO BANCO DE DADOS ---
+                // Você usaria 'tokenData' aqui
+                
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return Content($"Erro ao obter token do ML: {response.StatusCode}. Detalhe: {errorContent}");
+            }
         }
-        else
-        {
-            // Lidar com erro
-            var errorContent = await response.Content.ReadAsStringAsync();
-            return Content($"Erro ao obter token do ML: {response.StatusCode}. Detalhe: {errorContent}");
-        }
-    }
-    
-    // ... Definição da classe TokenResponse em outro lugar para desserialização
-    public class TokenResponse
-    {
-        public string access_token { get; set; }
-        public string token_type { get; set; }
-        public int expires_in { get; set; }
-        public string scope { get; set; }
-        public long user_id { get; set; }
-        public string refresh_token { get; set; }
-    }
-}   
+    } // Fim da Classe HomeController
+} // Fim do Namespace Bmatec.Controllers
