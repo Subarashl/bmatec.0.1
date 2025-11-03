@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Bmatec")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+05d4dfb286656040b8a02035936ab517ca9f52d8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Bmatec")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Bmatec")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
