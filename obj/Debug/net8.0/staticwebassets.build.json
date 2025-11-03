@@ -1,1 +1,11 @@
-{"Version":1,"Hash":"B/HvkozdqzIQqMK47Kirf6VOqE+YCsMkmDMn12scwfA=","Source":"Bmatec","BasePath":"_content/Bmatec","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "Iq/ph2Us7XjPBMgVIHP2FKWaPZqCLhlNFuRH0mD8x3M=",
+  "Source": "Bmatec",
+  "BasePath": "_content/Bmatec",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
