@@ -23,3 +23,4 @@ C:\Users\luize\Documents\projetos.git\Bmatec\obj\Debug\net8.0\refint\Bmatec.dll
 C:\Users\luize\Documents\projetos.git\Bmatec\obj\Debug\net8.0\Bmatec.pdb
 C:\Users\luize\Documents\projetos.git\Bmatec\obj\Debug\net8.0\Bmatec.genruntimeconfig.cache
 C:\Users\luize\Documents\projetos.git\Bmatec\obj\Debug\net8.0\ref\Bmatec.dll
+C:\Users\luize\Documents\projetos.git\Bmatec\obj\Debug\net8.0\Bmatec.sourcelink.json
